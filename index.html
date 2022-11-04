@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Intro to Leaflet</title>
+	<!-- the Leaflet CSS -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+	<!-- the Leaflet JavaScript library -->
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+	<!-- Leaflet.markercluster CSS links -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
+<!-- Leaflet.markercluster JS link -->
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+</head>
+
+<body>
+
+  <h1>Bicycle Parking Locations in Cambridge </h1>
+
+
+	  <p> Below is a map showing the designated locations of bicycle racks across Cambridge.
+			The informaton was created through three methods: site surveys, detection through aerial imagry,
+			and installation tracking. The data does not include bicycle parking on private
+			property and excludes some racks that do not meet the city’s standards for rack design.
+
+			 .</p>
+
+
+	<!-- code where we create and name the container that holds the map -->
+	<div id="map" style="height: 75vh; width: 120vh;"></div>
+”
+  <script type="text/javascript" src="../bikerack_reproject.js"> </script>
+
+	<p> Map source: <a href="https://www.cambridgema.gov/GIS/gisdatadictionary/Recreation/RECREATION_BikeRacks">City of Cambridge Website</a> </p>
+
+	<!-- code where we build the map and its functionality -->
+	<script>
+		var mymap = L.map('map').setView([42.376112, -71.110365], 14);
+
+		var basemap = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.png', {
+			attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+		}).addTo(mymap);
+
+		var bikeracks = L.geoJson(data, {
+	        						pointToLayer: function(feature, latlng){
+	            				var marker = L.marker(latlng);
+	            				marker.bindPopup("Capacity: " + feature.properties.Capacity + "<br>Status: " + feature.properties.Status);
+	            				return marker;
+							        }
+									   });
+		var clusters = L.markerClusterGroup({showCoverageOnHover: false,});
+		clusters.addLayer(bikeracks);
+		mymap.addLayer(clusters);
+
+
+
+
+
+	</script>
+
+</body>
+</html>
